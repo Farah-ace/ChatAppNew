@@ -1,0 +1,87 @@
+.container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    /* background-color: rgb(123, 123, 180); */
+    /* padding: 16px; */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #391966;
+}
+
+.header {
+    width: 600px;
+    height: 60px;
+    padding: 16px;
+    background-color: #391966;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.subContainer {
+    width: 600px;
+    height: 360px;
+    background-color: #C6B5D8;
+    /* border-radius: 16px; */
+    /* box-shadow: ; */
+    padding: 16px;
+    overflow-y: scroll;
+
+}
+
+.nameBox {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.dp {
+    background-color: blue;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    outline: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.textInDp {
+    color: white;
+    /* text-align: center; */
+}
+.headText{
+    color: white;
+}
+
+.typeContainer {
+    position: relative;
+}
+
+.inputBox {
+    /* position: relative; */
+    height: 36px;
+    width: 520px;
+    padding: 4px;
+    border: none;
+    border-bottom-left-radius: 10px;
+    outline: 2px solid #C6B5D8;
+}
+
+.inputBox:focus {
+    outline: 2px solid #6F4D9F;
+}
+
+.button {
+    height: 46px;
+    width: 106px;
+    border: none;
+    border-bottom-right-radius: 10px;
+    color: white;
+    background-color: #391966;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 4px;
+    letter-spacing: 0.6px;
+}

@@ -1,12 +1,16 @@
 // forgot password page
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import axios from 'axios'
+import styles from '../../styles/authStyle.module.css';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  const router = useRouter()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -16,11 +20,13 @@ export default function ForgotPassword() {
 
     try {
       await axios.post(
-        'http://localhost:5000/api/forgot-password',
+        'http://localhost:5000/api/auth/forgot-password',
         { email },
         { withCredentials: true }
       )
-      setMessage('If this email is registered, a reset link has been sent.')
+      setMessage('If this email is registered, a reset OTP has been sent.')
+      router.push('/auth/reset-password')
+
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to send reset email')
     } finally {
@@ -29,17 +35,16 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div>
-      <div >
-        <h1>Forgot Password</h1>
+    <div className={styles.container}>
+      <div className={styles.subContainer}>
+        <h1 className={styles.heading}>Forgot Password</h1>
 
-        {message && (
-          <p>{message}</p>
-        )}
-        {error && <p >{error}</p>}
+        {message && <div className="text-red-500 text-sm mb-4 text-center">{message}</div>}
+        {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <input
+            className={styles.inputBox}
             type="email"
             placeholder="Enter your email"
             value={email}
@@ -49,6 +54,7 @@ export default function ForgotPassword() {
           />
 
           <button
+            className={styles.button}
             type="submit"
             disabled={loading}
 
@@ -57,9 +63,9 @@ export default function ForgotPassword() {
           </button>
         </form>
 
-        <p >
-          Remembered?{' '}
-          <a href="/auth/login" >
+        <p className={styles.para}>
+          Remember the password?{' '}
+          <a href="/auth/login" className={styles.link}>
             Sign In
           </a>
         </p>

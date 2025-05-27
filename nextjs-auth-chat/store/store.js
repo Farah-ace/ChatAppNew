@@ -1,10 +1,29 @@
-import { configureStore } from '@reduxjs/toolkit'
-import authReducer from './authSlice'
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import authReducer from './authSlice';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import { combineReducers } from 'redux';
 
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// Fix non-serializable warnings here
 const store = configureStore({
-  reducer: {
-    auth: authReducer
-  }
-})
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER'],
+    },
+  }),
+});
 
-export default store
+export const persistor = persistStore(store);
+export default store;
