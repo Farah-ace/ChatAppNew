@@ -48,3 +48,28 @@
     color: white;
     /* text-align: center; */
 }
+.btnDiv{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.updateBtn{
+    width: 70px;
+    height: 40px;
+    border-radius: 30%;
+    background-color: blue;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+.deleteBtn{
+    width: 70px;
+    height: 40px;
+    border-radius: 30%;
+    background-color: red;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}

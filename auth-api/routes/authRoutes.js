@@ -8,7 +8,8 @@ const { registerSchema,
     otpVerifySchema,
     resetPasswordSchema, } = require('../validation/userValidation');
 
-const { validate } = require('../middleware/validate')
+const { validate } = require('../middleware/validate');
+const sendEmail = require('../utils/sendEmail');
 
 //Auth routes
 router.post('/register', validate(registerSchema), authController.register);
@@ -17,8 +18,8 @@ router.post('/login', validate(signInSchema), authController.login);
 router.post('/forgot-password', validate(forgotPasswordSchema), authController.forgotPassword);
 router.post('/reset-password', validate(resetPasswordSchema), authController.resetPassword);
 router.get('/users', protect, isAdmin, authController.getUsers);
-router.put('/user/:id', protect, isAdmin, authController.updateUser);
-
+//router.put('/user/:id', protect, isAdmin, authController.updateUser);
+router.delete('/user/:id', protect, isAdmin, authController.deleteUser);
 
 
 

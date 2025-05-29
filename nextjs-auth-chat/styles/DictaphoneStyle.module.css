@@ -1,0 +1,42 @@
+.popupStyle {
+    position: fixed;
+    bottom: 100px;
+    left: 500px;
+    width: 250px;
+    padding: 15px;
+    background-color: white;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.startStopDiv {
+    display: flex;
+    gap: 20px;
+}
+
+.button {
+    height: 40px;
+    width: 80px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    background-color: #391966;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 4px;
+    letter-spacing: 0.6px;
+}
+
+.inputBox {
+    height: 28px;
+    padding: 4px;
+    border: none;
+    outline: 2px solid #6F4D9F;
+    border-radius: 8px;
+}

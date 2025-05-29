@@ -17,6 +17,7 @@
     background-color: #391966;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    border: 2px solid #391966;
 }
 
 .subContainer {
@@ -27,6 +28,7 @@
     /* box-shadow: ; */
     padding: 16px;
     overflow-y: scroll;
+    border: 2px solid #391966,
 
 }
 
@@ -51,26 +53,48 @@
     color: white;
     /* text-align: center; */
 }
-.headText{
+
+.headText {
     color: white;
 }
 
 .typeContainer {
-    position: relative;
+    display: flex;
+    background-color: white;
+    color: grey;
+    width: 632px;
+    height: 40px;
+    outline: 2px solid #391966;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .inputBox {
-    /* position: relative; */
-    height: 36px;
-    width: 520px;
-    padding: 4px;
+    width: 86%;
     border: none;
-    border-bottom-left-radius: 10px;
-    outline: 2px solid #C6B5D8;
+    outline: none;
+    padding: 0.5rem;
+    font-size: 1rem;
 }
 
 .inputBox:focus {
-    outline: 2px solid #6F4D9F;
+    outline: none;
+}
+
+.iconContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon {
+    color: #391966;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 1;
+    position: relative;
+
 }
 
 .button {

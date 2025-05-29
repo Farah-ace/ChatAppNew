@@ -5,8 +5,14 @@ import io from 'socket.io-client';
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-
+import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import styles from '../../styles/chatScreenStyle.module.css';
+import Dictaphone from '../../components/Dictaphone';
+
+const BadWordsNext = require('bad-words-next');
+const en = require('bad-words-next/lib/en'); // Import the English dictionary
+const badwords = new BadWordsNext({ data: en });
 
 const socket = io('http://localhost:5000');
 
@@ -22,7 +28,52 @@ export default function Chat() {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [hasBadWords, setHasBadWords] = useState(false);
 
+
+  const [showDictaphone, setShowDictaphone] = useState(false);
+
+  //Receive data from child and handle it
+  const handleSpeechResult = (text) => {
+    console.log("Received:", text);
+    setNewMessage(text);
+  };
+
+  //Notify admin function
+  const NotifyAdmin = async () => {
+    try {
+      await axios.post(
+        `http://localhost:5000/api/chat/notify/${currentUser._id}/${otherUserId}`
+      );
+      console.log("Notified admin:");
+
+    } catch (err) {
+      console.error('Error Notify Admin:', err);
+    }
+  }
+
+  //Check bad words function
+  const checkBadWords = () => {
+    try {
+      console.log(newMessage);
+      const containsBadWords = badwords.check(newMessage);
+      console.log(containsBadWords);
+      setHasBadWords(containsBadWords);
+      console.log(hasBadWords);
+      
+      if (containsBadWords === true) {
+        //Notify to admin about Current user and other user
+        console.log("Notify Admin Called");
+        
+        NotifyAdmin();
+      }
+
+    }
+    catch (err) {
+      console.log(err);
+    }
+
+  }
   useEffect(() => {
     const fetchMessages = async () => {
       if (!otherUserId || !currentUser?._id) return;
@@ -64,7 +115,10 @@ export default function Chat() {
     };
   }, [currentUser]);
 
+
+  //Send Message
   const sendMessage = () => {
+    console.log("Send button clicked");
     if (!newMessage.trim()) return;
 
     socket.emit('private_message', {
@@ -78,6 +132,7 @@ export default function Chat() {
       content: newMessage
     }]);
     setNewMessage('');
+    checkBadWords();
   };
 
   return (
@@ -123,14 +178,27 @@ export default function Chat() {
 
       </div>
       <div className={styles.typeContainer}>
-        <input className={styles.inputBox}
+        {/* style it with border none and also on focus border none */}
+        <input
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Message"
-        />
-        {/* <FontAwesomeIcon icon="fa-solid fa-microphone" /> */}
-        <button className={styles.button}
-          onClick={sendMessage}>Send</button>
+          placeholder='Message' className={styles.inputBox} />
+
+        <div className={styles.iconContainer} >
+          <div onClick={() => setShowDictaphone(true)}>
+            <FontAwesomeIcon icon={faMicrophone} className={styles.icon} />
+          </div>
+          <div onClick={sendMessage}>
+            <FontAwesomeIcon icon={faPaperPlane} className={styles.icon} />
+          </div>
+        </div>
+        {showDictaphone && (
+          <Dictaphone
+            onTextSubmit={handleSpeechResult}
+            onClose={() => setShowDictaphone(false)}
+          />
+        )}
+
       </div>
     </div>
   );

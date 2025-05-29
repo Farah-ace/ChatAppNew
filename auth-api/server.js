@@ -8,7 +8,8 @@ const socketIo = require('socket.io');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
-const chatRoutes = require('./routes/chatRoutes')
+const chatRoutes = require('./routes/chatRoutes');
+
 const Message = require('./models/Message');
 
 dotenv.config();

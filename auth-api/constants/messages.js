@@ -29,6 +29,7 @@ module.exports = {
   OTP_MESSAGE : 'Your OTP is ',
   RESET_PASSWORD_OTP: 'OTP for Password Reset',
   OTP_SENT : 'OTP sent to email',
+  BAD_WORDS_USED: 'Bad Words Used',
   
   
 };

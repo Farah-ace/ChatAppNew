@@ -2,12 +2,16 @@ const User = require('../models/User');
 const Message = require('../models/Message')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-
-const messages = require('../constants/messages')
+const dotenv = require('dotenv');
+const sendEmail = require('../utils/sendEmail');
+const messages = require('../constants/messages');
 
 exports.chatUsers = async (req, res) => {
   try {
-    const users = await User.find({ _id: { $ne: req.user.id } }).select('-password');
+    const users = await User.find({
+      _id: { $ne: req.user.id },
+      role: { $ne: 'admin' }
+    }).select('-password');
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
@@ -29,4 +33,29 @@ exports.getMessages = async (req, res) => {
     res.status(500).json({ error: 'Error fetching messages' });
   }
 };
+exports.NotifyAdmin = async (req, res) => {
+  const { user1, user2 } = req.params;
+  const email = 'farahlasharibaloch@gmail.com';
+
+  try {
+    // fetch full user details from DB if needed to make email more understanable
+    // const userOne = await User.findById(user1);
+    // const userTwo = await User.findById(user2);
+
+    await sendEmail(
+      email,
+      messages.BAD_WORDS_USED,
+      `${messages.BAD_WORDS_USED} between User1 ID: ${user1} and User2 ID: ${user2}`
+    );
+
+    console.log("Email sent to admin");
+    res.status(200).json({ message: "Admin notified successfully" });
+
+  } catch (err) {
+    console.log("Email not sent to admin", err);
+    res.status(500).json({ error: "Failed to notify admin" });
+  }
+};
+
+
 

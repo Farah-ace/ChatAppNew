@@ -30,11 +30,16 @@ export default function LoginPage() {
         },
         { withCredentials: true }
       )
-      
+
       dispatch(setUser(res.data.user));
       dispatch(setToken(res.data.token));
-      
-      router.push('/chat/chatUsers')
+
+      if (res.data.user.role === "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push('/chat/chatUsers')
+      }
+
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed')
 
