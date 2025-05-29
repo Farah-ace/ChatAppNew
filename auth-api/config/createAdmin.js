@@ -10,7 +10,7 @@ mongoose.connect(Mongo).then(async () => {
   const password = await bcrypt.hash('admin123', 10);
   const admin = await User.create({
     name: 'Admin',
-    email: 'farahlasharibaloch@gmail.com',
+    email: process.env.ADMIN_EMAIL,
     password,
     isVerified: true,
     role: 'admin'

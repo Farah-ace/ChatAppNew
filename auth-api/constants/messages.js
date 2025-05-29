@@ -31,5 +31,12 @@ module.exports = {
   OTP_SENT : 'OTP sent to email',
   BAD_WORDS_USED: 'Bad Words Used',
   
+  //Chat Controller Error
+  MESSAGE_FETCH_ERROR:'Error fetching messages',
+  ADMIN_NOTIFICATION_FAILED:'Failed to notify admin',
+
+  //Chat Controller Success
+  ADMIN_NOTIFIED:'Admin notified successfully',
+  
   
 };

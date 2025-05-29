@@ -10,7 +10,7 @@ const sendEmail = async (to, subject, text) => {
   });
 
   await transporter.sendMail({
-    from: `"Auth System" <${process.env.EMAIL_USER}>`,
+    from: `"Chat App Auth System" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     text,

@@ -14,7 +14,7 @@ exports.chatUsers = async (req, res) => {
     }).select('-password');
     res.json(users);
   } catch (err) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: messages.INTERNAL_SERVER_ERROR });
   }
 };
 
@@ -30,13 +30,14 @@ exports.getMessages = async (req, res) => {
     }).sort({ timestamp: 1 });
     res.json(messages);
   } catch (err) {
-    res.status(500).json({ error: 'Error fetching messages' });
+    res.status(500).json({ error: messages.MESSAGE_FETCH_ERROR });
   }
 };
 exports.NotifyAdmin = async (req, res) => {
   const { user1, user2 } = req.params;
-  const email = 'farahlasharibaloch@gmail.com';
-
+  const email = process.env.ADMIN_EMAIL;
+  console.log(email);
+  
   try {
     // fetch full user details from DB if needed to make email more understanable
     // const userOne = await User.findById(user1);
@@ -47,13 +48,10 @@ exports.NotifyAdmin = async (req, res) => {
       messages.BAD_WORDS_USED,
       `${messages.BAD_WORDS_USED} between User1 ID: ${user1} and User2 ID: ${user2}`
     );
-
-    console.log("Email sent to admin");
-    res.status(200).json({ message: "Admin notified successfully" });
+    res.status(200).json({ message: messages.ADMIN_NOTIFIED });
 
   } catch (err) {
-    console.log("Email not sent to admin", err);
-    res.status(500).json({ error: "Failed to notify admin" });
+    res.status(500).json({ error: messages.ADMIN_NOTIFICATION_FAILED });
   }
 };
 
