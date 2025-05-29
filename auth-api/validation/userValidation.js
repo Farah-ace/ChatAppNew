@@ -28,7 +28,7 @@ exports.forgotPasswordSchema = z.object({
 
 // OTP Verification Schema
 exports.otpVerifySchema = z.object({
-    email : z.string().email("Invalid email"),
+    email: z.string().email("Invalid email"),
     otp: z.string()
         .length(6, 'OTP must be exactly 6 characters')
         .regex(/^\d+$/, 'OTP must be numeric'),
@@ -36,7 +36,7 @@ exports.otpVerifySchema = z.object({
 
 // Reset Password Schema
 exports.resetPasswordSchema = z.object({
-    email : z.string().email("Invalid email"),
+    email: z.string().email("Invalid email"),
     otp: z.string()
         .length(6, 'OTP must be exactly 6 characters')
         .regex(/^\d+$/, 'OTP must be numeric'),

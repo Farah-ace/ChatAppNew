@@ -51,7 +51,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
     //console.log("User found", user);
 
-    if (!user) return res.status(401).json({ error: messages.INVALID_EMAIL_ERROR });
+    if (!user) return res.status(401).json({ error: messages.USER_NOT_EXIST_ERROR });
 
     if (!user.isVerified) {
       return res.status(403).json({ error: messages.EMAIL_VERIFICATION_ERROR });
@@ -59,11 +59,12 @@ exports.login = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     //console.log('Password matches:', isMatch);
-    if (!isMatch) return res.status(401).json({ error: messages.INVALID_PASSWORD_ERROR });
+    if (!isMatch) return res.status(401).json({ error: messages.INCORRECT_PASSWORD_ERROR });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token, user });
-    //console.log("Token generated", token);
+
+    res.json({ message: messages.LOGIN_SUCCESS });
 
   }
   catch (error) {
@@ -86,19 +87,30 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  const { email, otp, newPassword } = req.body;
-  const user = await User.findOne({ email, otp });
+  try {
+    const { email, otp, newPassword } = req.body;
+    try {
+      const user = await User.findOne({ email, otp });
+      if (!user || user.otpExpiry < Date.now()) {
+        return res.status(400).json({ error: messages.OTP_VALIDATION_ERROR });
+      }
 
-  if (!user || user.otpExpiry < Date.now()) {
-    return res.status(400).json({ error: messages.OTP_VALIDATION_ERROR });
+      user.password = await bcrypt.hash(newPassword, 10);
+      user.otp = null;
+      user.otpExpiry = null;
+      await user.save();
+
+      res.json({ message: messages.PASSWORD_RESET_SUCCESS });
+      //console.log("Inside reset auth");
+
+    }
+    catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
-
-  user.password = await bcrypt.hash(newPassword, 10);
-  user.otp = null;
-  user.otpExpiry = null;
-  await user.save();
-
-  res.json({ message: messages.PASSWORD_RESET_SUCCESS });
 };
 
 exports.getUsers = async (req, res) => {
@@ -106,22 +118,21 @@ exports.getUsers = async (req, res) => {
     const users = await User.find().select('-password');
     res.json(users);
   } catch (err) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: messages.INTERNAL_SERVER_ERROR });
   }
 
 };
 
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
-
   try {
-    const deletedUser = await User.findByIdAndDelete(id);  
+    const deletedUser = await User.findByIdAndDelete(id);
     if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: messages.USER_NOT_EXIST_ERROR });
     }
-    res.json({ message: 'User deleted successfully' });
+    res.json({ message: messages.USER_DELETED_SUCCESS });
   } catch (err) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: messages.INTERNAL_SERVER_ERROR });
   }
 
 }

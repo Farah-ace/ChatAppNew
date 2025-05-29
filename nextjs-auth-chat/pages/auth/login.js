@@ -10,6 +10,8 @@ import styles from '../../styles/authStyle.module.css';
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState(null)
+  const [zodErrror, setZodError] = useState(null)
+  const [message, setMessage] = useState(null)
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -31,6 +33,7 @@ export default function LoginPage() {
         { withCredentials: true }
       )
 
+      setMessage(res.data?.message || 'Login successfully')
       dispatch(setUser(res.data.user));
       dispatch(setToken(res.data.token));
 
@@ -41,6 +44,7 @@ export default function LoginPage() {
       }
 
     } catch (err) {
+      setZodError(err.response?.data[0]?.message)
       setError(err.response?.data?.error || 'Login failed')
 
     }
@@ -52,8 +56,12 @@ export default function LoginPage() {
       <div className={styles.subContainer}>
         <h1 className={styles.heading}>Login</h1>
 
+        {message && (<div className="text-red-500 text-sm mb-4 text-center">{message}</div>)}
         {error && (
           <div className="text-red-500 text-sm mb-4 text-center">{error}</div>
+        )}
+        {zodErrror && (
+          <div className="text-red-500 text-sm mb-4 text-center">{zodErrror}</div>
         )}
 
         <form onSubmit={handleSubmit} className={styles.form}>

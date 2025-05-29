@@ -11,17 +11,12 @@ export default function SignupPage() {
     email: '',
     password: '',
     confirmPassword: '',
-  })
-
-  const [err, setErr] = useState({
-    nameErr: '',
-    emailErr: '',
-    passwordErr: '',
-    confirmPasswordErr: '',
-  })
-
+  });
 
   const [error, setError] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [zodErrror, setZodError] = useState(null)
+
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -51,22 +46,13 @@ export default function SignupPage() {
         { withCredentials: true }
       )
 
-      // Auto login after signup
-      // dispatch(loginUser({ email: form.email, password: form.password }))
-
-
-
-
+      setMessage(res.data?.message || 'Account registered successfully')
       router.push('/auth/verify-email')
 
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed')
-      //console.log(err.response.data.errors.email._errors[0]);
-      // console.log(err.response.data.errors.userName._errors[0]);
-      // console.log(err.response.data.errors.password._errors[0]);
-      // console.log(err.response.data.errors.confirmPassword._errors[0]);
-
-
+      setZodError(err.response?.data[0]?.message);
+      //console.log("zod error", err.response?.data[0]?.message);
+      setError(err.response?.data?.error);
     }
   }
 
@@ -76,8 +62,12 @@ export default function SignupPage() {
       <div className={styles.subContainer}>
         <h1 className={styles.heading}>Sign Up</h1>
 
+        {message && (<div className="text-red-500 text-sm mb-4 text-center">{message}</div>)}
         {error && (
           <div className="text-red-500 text-sm mb-4 text-center">{error}</div>
+        )}
+        {zodErrror && (
+          <div className="text-red-500 text-sm mb-4 text-center">{zodErrror}</div>
         )}
 
         <form className={styles.form}

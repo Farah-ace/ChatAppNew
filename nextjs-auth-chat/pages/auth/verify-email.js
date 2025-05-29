@@ -10,6 +10,7 @@ export default function VerifyEmail() {
   const [email, setEmail] = useState('');
   const [form, setForm] = useState({ otp: '' })
   const [error, setError] = useState(null)
+  const [zodErrror, setZodError] = useState(null)
   const [message, setMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -42,12 +43,11 @@ export default function VerifyEmail() {
         { withCredentials: true }
       )
 
-      console.log(res);
-
-      setMessage('Email verified successfully! You can now login.')
-      setTimeout(() => router.push('/auth/login'), 3000)
+      setMessage(res.data?.message || 'Email verified successfully! You can now login.')
+      router.push('/auth/login');
     } catch (err) {
-      setError(err.response?.data?.message || 'Verification failed')
+      setZodError(err.response?.data[0]?.message);
+      setError(err.response?.data?.error || 'Verification failed')
     } finally {
       setLoading(false)
     }
@@ -60,7 +60,9 @@ export default function VerifyEmail() {
 
         {message && <div className="text-red-500 text-sm mb-4 text-center">{message}</div>}
         {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
-
+        {zodErrror && (
+          <div className="text-red-500 text-sm mb-4 text-center">{zodErrror}</div>
+        )}
         <form onSubmit={handleSubmit} className={styles.form}>
           <input
             className={styles.inputBox}

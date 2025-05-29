@@ -12,6 +12,7 @@ export default function ResetPassword() {
     confirmPassword: '',
   })
   const [error, setError] = useState(null)
+  const [zodErrror, setZodError] = useState(null)
   const [message, setMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -19,6 +20,7 @@ export default function ResetPassword() {
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('email');
+    // console.log(storedEmail);
     if (storedEmail) {
       setEmail(storedEmail);
     }
@@ -40,7 +42,7 @@ export default function ResetPassword() {
 
     setLoading(true)
     try {
-      await axios.post(
+      const res = await axios.post(
         'http://localhost:5000/api/auth/reset-password',
         {
           email: email,
@@ -50,12 +52,15 @@ export default function ResetPassword() {
         },
         { withCredentials: true }
       )
-      setMessage('Password reset successfully')
-      setTimeout(() => {
-        router.push('/auth/login')
-      }, 3000)
+      setMessage(res.data?.message || 'Password reset successfully')
+      
+      router.push('/auth/login');
+      console.log(message);
+      
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to reset password')
+      //console.log(err.response?.data[0]?.message);
+      setZodError(err.response?.data[0]?.message);
+      setError(err.response?.data?.error || 'Failed to reset password')
     } finally {
       setLoading(false)
     }
@@ -68,7 +73,9 @@ export default function ResetPassword() {
 
         {message && <div className="text-red-500 text-sm mb-4 text-center">{message}</div>}
         {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
-
+        {zodErrror && (
+          <div className="text-red-500 text-sm mb-4 text-center">{zodErrror}</div>
+        )}
         <form onSubmit={handleSubmit} className={styles.form}>
           <input
             className={styles.inputBox}
