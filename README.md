@@ -1,4 +1,3 @@
-# Chat-App
 # 🗨️ 1-to-1 Real-Time Chat Application
 
 A full-featured 1-to-1 chat application built using **Node.js**, **Express**, **Next.js**, and **MongoDB**. It supports user authentication, email verification, real-time chatting, voice-to-text messaging, content moderation, and admin management.
