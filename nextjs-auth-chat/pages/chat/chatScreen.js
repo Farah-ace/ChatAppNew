@@ -35,7 +35,6 @@ export default function Chat() {
 
   //Receive data from child and handle it
   const handleSpeechResult = (text) => {
-    console.log("Received:", text);
     setNewMessage(text);
   };
 
@@ -45,7 +44,7 @@ export default function Chat() {
       await axios.post(
         `http://localhost:5000/api/chat/notify/${currentUser._id}/${otherUserId}`
       );
-      console.log("Notified admin:");
+      console.log("Notified to admin");
 
     } catch (err) {
       console.error('Error Notify Admin:', err);
@@ -55,16 +54,11 @@ export default function Chat() {
   //Check bad words function
   const checkBadWords = () => {
     try {
-      console.log(newMessage);
       const containsBadWords = badwords.check(newMessage);
-      console.log(containsBadWords);
       setHasBadWords(containsBadWords);
-      console.log(hasBadWords);
-      
+
       if (containsBadWords === true) {
         //Notify to admin about Current user and other user
-        console.log("Notify Admin Called");
-        
         NotifyAdmin();
       }
 
